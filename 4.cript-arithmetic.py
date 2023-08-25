@@ -47,6 +47,8 @@ def solve(words, i, S, mp, used, Hash, CharAtfront):
     return x
 arr = [ "SIX", "SEVEN", "SEVEN" ]
 S = "TWENTY"
+print(arr)
+print(S)
 if isSolvable(arr, S):
     print("Yes")
 else:
