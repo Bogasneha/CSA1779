@@ -1,55 +1,22 @@
-print("sneha")
-print("192111439")
-def isSolvable(words, result):
-    mp = [-1]*(26)
-    used = [0]*(10)
-    Hash = [0]*(26)
-    CharAtfront = [0]*(26)
-    uniq = ""
-    for word in range(len(words)):
-        for i in range(len(words[word])):
-            ch = words[word][i]
-            Hash[ord(ch) - ord('A')] += pow(10, len(words[word]) - i - 1)
-            if mp[ord(ch) - ord('A')] == -1:
-                mp[ord(ch) - ord('A')] = 0
-                uniq += str(ch)
-            if i == 0 and len(words[word]) > 1:
-                CharAtfront[ord(ch) - ord('A')] = 1
-    for i in range(len(result)):
-        ch = result[i]
-        Hash[ord(ch) - ord('A')] -= pow(10, len(result) - i - 1)
-        if mp[ord(ch) - ord('A')] == -1:
-            mp[ord(ch) - ord('A')] = 0
-            uniq += str(ch)
-        if i == 0 and len(result) > 1:
-            CharAtfront[ord(ch) - ord('A')] = 1
-    mp = [-1]*(26)
-    return True
-def solve(words, i, S, mp, used, Hash, CharAtfront):
-    # If i is word.length
-    if i == len(words):
-        return S == 0
-    ch = words[i]
-    val = mp[ord(words[i]) - ord('A')]
-    if val != -1:
-        return solve(words, i + 1, S + val * Hash[ord(ch) - ord('A')], mp, used, Hash, CharAtfront)
-    x = False
-    for l in range(10):
-        if CharAtfront[ord(ch) - ord('A')] == 1 and l == 0:
-            continue
-        if used[l] == 1:
-            continue
-        mp[ord(ch) - ord('A')] = l
-        used[l] = 1
-        x |= solve(words, i + 1, S + l * Hash[ord(ch) - ord('A')], mp, used, Hash, CharAtfront)
-        mp[ord(ch) - ord('A')] = -1
-        used[l] = 0
-    return x
-arr = [ "SIX", "SEVEN", "SEVEN" ]
-S = "TWENTY"
-print(arr)
-print(S)
-if isSolvable(arr, S):
-    print("Yes")
+print("sneha 192111439")
+import itertools
+def solve_cryptarithm(puzzle):
+    words = puzzle.replace('+', ' ').replace('=', ' ').split()
+    result_word = words[-1]
+    words = words[:-1]
+    letters = set(''.join(words + [result_word]))
+    digits = range(10)
+    for perm in itertools.permutations(digits, len(letters)):
+        digit_map = dict(zip(letters, perm))
+        numbers = [int(''.join(str(digit_map[c]) for c in word)) for word in words]
+        result = int(''.join(str(digit_map[c]) for c in result_word))
+        if sum(numbers) == result:
+            return digit_map
+    return None
+puzzle = input("enter the cryptarithmetic :")
+solution = solve_cryptarithm(puzzle)
+if solution:
+    for letter, digit in solution.items():
+        print(f'{letter}: {digit}')
 else:
-    print("No")
+    print('No solution found.')
